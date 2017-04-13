@@ -34,7 +34,7 @@ class Account:
 
     def complete_orders(self, currency='btc'):
         payload = {**self.default_payload, 'currency': currency}
-        return self._post('order/complete_orders', payload)
+        return self._post('order/complete_orders', payload)['completeOrders']
 
     def cancel(self, currency='btc',
                order_id=None, price=None, qty=None, is_ask=None, **kwargs):
@@ -79,7 +79,7 @@ class Account:
                        'currency': currency}
             return self._post('order/limit_buy', payload)
 
-    def sell(self, currency='btc', price=None, qty=None, **kwargs):
+    def sell(self, currency='btc', qty=None, price=None, **kwargs):
         """
         make a sell order.
         if price is not given, it will make a market price order.
