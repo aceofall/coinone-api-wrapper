@@ -125,5 +125,5 @@ class Account:
         res = json.loads(res)
         if res['result'] == 'error':
             err = res['errorCode']
-            raise Exception('%s %s' % (err, error_code[err]))
+            raise Exception(int(err), error_code[err])
         return res

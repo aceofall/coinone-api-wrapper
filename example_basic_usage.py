@@ -15,7 +15,10 @@ if __name__ == "__main__":
     #  complete orders
     pprint(my.complete_orders())       # query for BTC by default
     pprint(my.complete_orders('eth'))  # query for ETH
-    pprint(my.complete_orders('bbb'))  # will raise error
+    try:
+        pprint(my.complete_orders('bbb'))  # will raise error
+    except Exception as e:
+        print(e.args)
 
     # make some insane orders, and cancel them
     my.buy(price=500, qty=1.000)
