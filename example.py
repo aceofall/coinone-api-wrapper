@@ -17,7 +17,7 @@ if __name__ == "__main__":
     pprint(my.complete_orders('eth'))  # query for ETH
     pprint(my.complete_orders('bbb'))  # will raise error
 
-    # make some orders with insane values, and cancel them
+    # make some insane orders, and cancel them
     my.buy(price=500, qty=1.000)
     my.buy(price=1000, qty=0.001)
     my.sell(price=100000000, qty=0.001)
