@@ -21,10 +21,10 @@ if __name__ == "__main__":
     my.buy(price=500, qty=1.000)
     my.buy(price=1000, qty=0.001)
     my.sell(price=100000000, qty=0.001)
-    orders = my.orders()
     print('made 3 orders')
+    orders = my.orders()
     pprint(orders)
-    my.cancel(**orders[-1])  # cancel the last order
+    my.cancel(**orders[-1])  # cancel the last one
     print('canceled last one')
     pprint(my.orders())
     my.cancel()              # will cancel all orders by default
