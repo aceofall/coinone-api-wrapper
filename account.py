@@ -6,35 +6,105 @@ import hmac
 import httplib2
 import time
 
+
 class Account:
     def __init__(self, token, key):
         self.token = token
         self.key = key
+        self.default_payload = {"access_token": self.token}
 
-    def default_payload(self):
-        return {"access_token": self.token}
-
-    def default_post(self, url):
-        res = get_response(base_url+url, self.default_payload(), self.key)
+    def post(self, url, payload=None):
+        if payload is None:
+            payload = self.default_payload
+        res = get_response(base_url+url, payload, self.key)
         res = json.loads(res)
-        if res['errorCode'] != '0':
-            raise Exception(error_code[res['errorCode']])
+        if res['result'] == 'error':
+            err = res['errorCode']
+            raise Exception('%s %s' % (err, error_code[err]))
         return res
 
     def info(self):
-        return self.default_post('account/user_info')
+        return self.post('account/user_info')
 
     def balance(self):
-        return self.default_post('account/balance')
+        return self.post('account/balance')
 
     def daily_balance(self):
-        return self.default_post('account/daily_balance')
+        return self.post('account/daily_balance')
 
     def deposit_address(self):
-        return self.default_post('account/deposit_address')
+        return self.post('account/deposit_address')
 
     def virtual_account(self):
-        return self.default_post('account/virtual_account')
+        return self.post('account/virtual_account')
+
+    def orders(self, currency='btc'):
+        payload = {**self.default_payload, 'currency': currency}
+        return self.post('order/limit_orders', payload)['limitOrders']
+
+    def complete_orders(self, currency='btc'):
+        payload = {**self.default_payload, 'currency': currency}
+        return self.post('order/complete_orders', payload)
+
+    def cancel(self, currency='btc',
+               order_id=None, price=None, qty=None, is_ask=None, **kwargs):
+        """
+        cancel an order.
+        If all params are empty, it will cancel all orders.
+        """
+        if all(param is None for param in (order_id, price, qty, is_ask)):
+            payload = {**self.default_payload, 'currency': currency}
+            return self.post('order/cancel_all', payload)
+        elif 'type' in kwargs and 'orderId' in kwargs:
+            payload = {**self.default_payload,
+                       'price': price,
+                       'qty': qty,
+                       'is_ask': 1 if kwargs['type'] == 'ask' else 0,
+                       'order_id': kwargs['orderId'],
+                       'currency': currency}
+            return self.post('order/cancel', payload)
+        else:
+            payload = {**self.default_payload,
+                       'order_id': order_id,
+                       'price': price,
+                       'qty': qty,
+                       'is_ask': is_ask,
+                       'currency': currency}
+            return self.post('order/cancel', payload)
+
+    def buy(self, currency='btc', price=None, qty=None, **kwargs):
+        """
+        make an buy order.
+        if quantity is not given, it will make a market price order.
+        """
+        if qty is None:
+            payload = {**self.default_payload,
+                       'price': price,
+                       'currency': currency}
+            return self.post('order/market_buy', payload)
+        else:
+            payload = {**self.default_payload,
+                       'price': price,
+                       'qty': qty,
+                       'currency': currency}
+            return self.post('order/limit_buy', payload)
+
+    def sell(self, currency='btc', price=None, qty=None, **kwargs):
+        """
+        make an sell order.
+        if price is not given, it will make a market price order.
+        """
+        if price is None:
+            payload = {**self.default_payload,
+                       'qty': qty,
+                       'currency': currency}
+            return self.post('order/market_sell', payload)
+        else:
+            payload = {**self.default_payload,
+                       'price': price,
+                       'qty': qty,
+                       'currency': currency}
+            return self.post('order/limit_sell', payload)
 
 
 def get_response(url, payload, key):
