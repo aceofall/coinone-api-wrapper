@@ -5,6 +5,8 @@ import hashlib
 import hmac
 import httplib2
 import time
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Account:
@@ -44,7 +46,7 @@ class Account:
         """
         if all(param is None for param in (order_id, price, qty, is_ask)):
             payload = {**self.default_payload, 'currency': currency}
-            return self._post('order/cancel_all', payload)
+            url = 'order/cancel_all'
         elif 'type' in kwargs and 'orderId' in kwargs:
             payload = {**self.default_payload,
                        'price': price,
@@ -52,7 +54,7 @@ class Account:
                        'is_ask': 1 if kwargs['type'] == 'ask' else 0,
                        'order_id': kwargs['orderId'],
                        'currency': currency}
-            return self._post('order/cancel', payload)
+            url = 'order/cancel'
         else:
             payload = {**self.default_payload,
                        'order_id': order_id,
@@ -60,7 +62,9 @@ class Account:
                        'qty': qty,
                        'is_ask': is_ask,
                        'currency': currency}
-            return self._post('order/cancel', payload)
+            url = 'order/cancel'
+        logger.debug('Cancel: %s' % payload)
+        return self._post(url, payload)
 
     def buy(self, currency='btc', price=None, qty=None, **kwargs):
         """
@@ -71,13 +75,15 @@ class Account:
             payload = {**self.default_payload,
                        'price': price,
                        'currency': currency}
-            return self._post('order/market_buy', payload)
+            url = 'order/market_buy'
         else:
             payload = {**self.default_payload,
                        'price': price,
                        'qty': qty,
                        'currency': currency}
-            return self._post('order/limit_buy', payload)
+            url = 'order/limit_buy'
+        logger.debug('Buy: %s' % payload)
+        return self._post(url, payload)
 
     def sell(self, currency='btc', qty=None, price=None, **kwargs):
         """
@@ -88,13 +94,15 @@ class Account:
             payload = {**self.default_payload,
                        'qty': qty,
                        'currency': currency}
-            return self._post('order/market_sell', payload)
+            url = 'order/market_sell'
         else:
             payload = {**self.default_payload,
                        'price': price,
                        'qty': qty,
                        'currency': currency}
-            return self._post('order/limit_sell', payload)
+            url = 'order/limit_sell'
+        logger.debug('Sell: %s' % payload)
+        return self._post(url, payload)
 
     def _post(self, url, payload=None):
         def encode_payload(payload):
