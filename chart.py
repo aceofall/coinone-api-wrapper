@@ -32,7 +32,7 @@ def raw_data(currency='btc', period='day'):
     return sorted(map(eval, res['completeOrders']), key=itemgetter('timestamp'))
 
 
-def get_data(currency='btc', period='day', interval=60*15):
+def get_data(interval=60*15, currency='btc', period='day'):
     raw = raw_data(currency, period)
     inf = 1e60
     ret = []
