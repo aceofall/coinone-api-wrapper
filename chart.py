@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def raw_data(currency='btc', period='day'):
     def eval(data):
-        """ Convert fetched data to navtive types """
+        """ Convert fetched data to native types """
         return {'price': int(data['price']),
                 'qty': float(data['qty']),
                 'timestamp': int(data['timestamp'])}
