@@ -60,5 +60,12 @@ def get_data(interval=60*15, currency='btc', period='day'):
     return pd.DataFrame(list(reversed(ret)))
 
 
+def ticker(currency='btc'):
+    url = 'https://api.coinone.co.kr/ticker/?currency={}&format=json'.format(currency)
+    http = httplib2.Http()
+    response, content = http.request(url, 'GET')
+    return json.loads(content)
+
+
 if __name__ == "__main__":
     print(get_data())
