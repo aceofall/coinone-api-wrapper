@@ -1,4 +1,4 @@
-from common import base_url, error_code
+from coinone.common import base_url, error_code
 import base64
 import simplejson as json
 import hashlib

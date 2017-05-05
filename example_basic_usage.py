@@ -1,5 +1,5 @@
 from secret import ACCESS_TOKEN, SECRET_KEY
-from account import Account
+from coinone.account import Account
 from pprint import pprint
 
 if __name__ == "__main__":
@@ -21,6 +21,7 @@ if __name__ == "__main__":
         print(e.args)
 
     # make some insane orders, and cancel them
+    # will throw error if you have not enough balance
     my.buy(price=500, qty=1.000)
     my.buy(price=1000, qty=0.001)
     my.sell(price=100000000, qty=0.001)
