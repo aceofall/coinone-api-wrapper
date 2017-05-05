@@ -67,5 +67,12 @@ def ticker(currency='btc'):
     return json.loads(content)
 
 
+def order_book(currency='btc'):
+    url = 'https://api.coinone.co.kr/orderbook/?currency={}&format=json'.format(currency)
+    http = httplib2.Http()
+    response, content = http.request(url, 'GET')
+    return json.loads(content)
+
+
 if __name__ == "__main__":
     print(get_data())
