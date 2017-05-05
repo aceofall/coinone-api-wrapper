@@ -1,8 +1,14 @@
 from secret import ACCESS_TOKEN, SECRET_KEY
-from account import Account
+from coinone.account import Account
 
 import random
 import time
+import logging
+
+log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+logging.basicConfig(format=log_format, level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 
 """
 Monkey is a dumb bot.
@@ -87,7 +93,7 @@ class Monkey:
             self.balance[self.target] -= qty
 
     def report(self):
-        print(self.balance)
+        logger.info('Balance: %s' % self.balance)
 
 
 if __name__ == "__main__":

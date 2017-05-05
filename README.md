@@ -10,9 +10,10 @@ only contains following two line.
     SECRET_KEY = 'your secret key'
 
 # Dependancies
-    python(>=3.5)
-    numpy
-    pandas
+
+* python(>=3.5)
+* numpy
+* pandas
 
 # Note
 USE IT AT YOUR OWN RISK! THESE SCRIPTS CAN DESTROY YOUR BALANCE!
