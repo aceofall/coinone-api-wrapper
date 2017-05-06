@@ -1,7 +1,7 @@
 import logging
 import httplib2
 import simplejson as json
-from common import error_code
+from coinone.common import error_code
 from operator import itemgetter
 import pandas as pd
 
@@ -72,7 +72,3 @@ def order_book(currency='btc'):
     http = httplib2.Http()
     response, content = http.request(url, 'GET')
     return json.loads(content)
-
-
-if __name__ == "__main__":
-    print(get_data())
