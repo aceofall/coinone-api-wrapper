@@ -1,5 +1,8 @@
-base_url = 'https://api.coinone.co.kr/v2/'
+base_url = {'public': 'https://api.coinone.co.kr/',
+            'v1': 'https://api.coinone.co.kr/v1/',
+            'v2': 'https://api.coinone.co.kr/v2/'}
 error_code = {
+    '4': "Blocked user access",
     '11': "Access token is missing",
     '12': "Invalid access token",
     '40': "Invalid API permission",

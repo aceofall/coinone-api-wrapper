@@ -41,6 +41,22 @@ class Account:
         payload = {**self.default_payload, 'currency': currency}
         return self._post('order/complete_orders', payload)['completeOrders']
 
+    def order_info(self, order_id=None, currency='btc'):
+        payload = {**self.default_payload, 'order_id': order_id, 'currency': currency}
+        return self._post('order/order_info', payload)['info']
+
+    def order_book(self, currency='btc'):
+        payload = '?format=json&currency=' + currency
+        return self._get('orderbook/', payload)
+
+    def trades(self, currency='btc', period='hour'):
+        payload = '?format=json&currency=' + currency + '&period=' + period
+        return self._get('trades/', payload)
+
+    def ticker(self, currency='btc'):
+        payload = '?format=json&currency=' + currency
+        return self._get('ticker/', payload)
+
     def cancel(self, currency='btc',
                order_id=None, price=None, qty=None, is_ask=None, **kwargs):
         """
@@ -132,8 +148,18 @@ class Account:
 
         if payload is None:
             payload = self.default_payload
-        res = get_response(base_url+url, payload, self.key)
+        res = get_response(base_url['v2']+url, payload, self.key)
         res = json.loads(res)
+        if res['result'] == 'error':
+            err = res['errorCode']
+            raise Exception(int(err), error_code[err])
+        return res
+
+    def _get(self, url, payload=None):
+        http = httplib2.Http()
+        header, res = http.request(base_url['public'] + url + payload, "GET")
+        res = json.loads(res)
+
         if res['result'] == 'error':
             err = res['errorCode']
             raise Exception(int(err), error_code[err])
